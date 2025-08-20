@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>reviveRestApi</name>
+  <displayName>Revive REST API (MCP Compatible)</displayName>
+  <version>1.0.0</version>
+  <author>Brian Tafoya</author>
+  <authorEmail>btafoya@briantafoya.com</authorEmail>
+  <url>https://github.com/btafoya/revive-adserver-restapi-plugin</url>
+  <license>GPL-2.0-or-later</license>
+  <description>
+    REST API plugin for Revive Adserver exposing campaigns, zones, banners, uploads, stats,
+    and native delivery targeting (ACLs + compiled limitation). Compatible with revive-adserver-mcp.
+  </description>
+  <compatibility>
+    <app>revive-adserver</app>
+    <version min="5.0.0" max="5.99.99"/>
+  </compatibility>
+  <settings>
+    <setting name="api_base" type="string" default="/api/v1" label="API Base Path"
+             description="Base path where the API is routed (relative to your Revive host)."/>
+  </settings>
+  <lifecycle>
+    <install>scripts/install.php</install>
+    <upgrade>scripts/upgrade.php</upgrade>
+    <uninstall>scripts/uninstall.php</uninstall>
+  </lifecycle>
+  <resources>
+    <resource type="readme">README.md</resource>
+    <resource type="changelog">CHANGELOG.md</resource>
+  </resources>
+</plugin>
