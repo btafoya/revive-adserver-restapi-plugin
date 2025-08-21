@@ -40,31 +40,29 @@ jobs:
       run: |
         # Create Revive plugin directory structure
         mkdir -p plugins/etc
-        mkdir -p www/admin/plugins/reviveRestApi
+        mkdir -p revive-plugin/www/admin/plugins/reviveRestApi
         
         # Copy main plugin definition to correct location with correct name
         cp plugin.xml plugins/etc/reviveRestApi.xml
         
-        # Copy plugin files to the admin plugin directory structure
-        cp -r src/ www/admin/plugins/reviveRestApi/
-        cp -r scripts/ www/admin/plugins/reviveRestApi/
-        cp routes.addendum.php www/admin/plugins/reviveRestApi/
-        cp README.md www/admin/plugins/reviveRestApi/
-        cp CHANGELOG.md www/admin/plugins/reviveRestApi/
-        cp composer.json www/admin/plugins/reviveRestApi/
+        # Copy plugin files to the plugin directory structure
+        cp -r src/ revive-plugin/www/admin/plugins/reviveRestApi/
+        cp -r scripts/ revive-plugin/www/admin/plugins/reviveRestApi/
+        cp routes.addendum.php revive-plugin/www/admin/plugins/reviveRestApi/
+        cp README.md revive-plugin/www/admin/plugins/reviveRestApi/
+        cp CHANGELOG.md revive-plugin/www/admin/plugins/reviveRestApi/
+        cp composer.json revive-plugin/www/admin/plugins/reviveRestApi/
         
-        # Copy the admin panel www directory to the correct location
-        if [ -d "www" ]; then
-          cp -r www/ www/admin/plugins/reviveRestApi/
-        fi
+        # Copy the admin panel and www files separately to avoid recursion
+        cp -r www/ revive-plugin/www/admin/plugins/reviveRestApi/
         
         # Copy vendor directory (production dependencies only)
         if [ -d "vendor" ]; then
-          cp -r vendor/ www/admin/plugins/reviveRestApi/
+          cp -r vendor/ revive-plugin/www/admin/plugins/reviveRestApi/
         fi
         
         # Create the zip file with correct Revive structure
-        zip -r reviveRestApi-${{ steps.version.outputs.VERSION }}.zip plugins/ www/
+        zip -r reviveRestApi-${{ steps.version.outputs.VERSION }}.zip plugins/ revive-plugin/www/
         
     - name: Create Release
       uses: softprops/action-gh-release@v1
