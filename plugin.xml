@@ -2,7 +2,7 @@
 <plugin>
   <name>reviveRestApi</name>
   <displayName>Revive REST API (MCP Compatible)</displayName>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <author>Brian Tafoya</author>
   <authorEmail>btafoya@briantafoya.com</authorEmail>
   <url>https://github.com/btafoya/revive-adserver-restapi-plugin</url>
