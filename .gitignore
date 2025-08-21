@@ -46,3 +46,7 @@ dist/
 # Cache
 cache/
 *.cache
+
+.crush
+.crush/*
+.crush.json

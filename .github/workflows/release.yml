@@ -39,26 +39,25 @@ jobs:
     - name: Create plugin package
       run: |
         # Create correct Revive plugin directory structure
-        mkdir -p reviveRestApi/plugins/etc
-        mkdir -p reviveRestApi/www/admin/plugins/reviveRestApi
+        mkdir -p reviveRestApi
         
-        # Copy main plugin definition to correct location (no version in filename)
-        cp plugin.xml reviveRestApi/plugins/etc/reviveRestApi.xml
+        # Copy main plugin definition to root of plugin directory
+        cp plugin.xml reviveRestApi/
         
         # Copy plugin files to the plugin directory structure
-        cp -r src/ reviveRestApi/www/admin/plugins/reviveRestApi/
-        cp -r scripts/ reviveRestApi/www/admin/plugins/reviveRestApi/
-        cp routes.addendum.php reviveRestApi/www/admin/plugins/reviveRestApi/
-        cp README.md reviveRestApi/www/admin/plugins/reviveRestApi/
-        cp CHANGELOG.md reviveRestApi/www/admin/plugins/reviveRestApi/
-        cp composer.json reviveRestApi/www/admin/plugins/reviveRestApi/
+        cp -r src/ reviveRestApi/
+        cp -r scripts/ reviveRestApi/
+        cp routes.addendum.php reviveRestApi/
+        cp README.md reviveRestApi/
+        cp CHANGELOG.md reviveRestApi/
+        cp composer.json reviveRestApi/
         
         # Copy the admin panel and www files
-        cp -r www/ reviveRestApi/www/admin/plugins/reviveRestApi/
+        cp -r www/ reviveRestApi/
         
         # Copy vendor directory (production dependencies only)
         if [ -d "vendor" ]; then
-          cp -r vendor/ reviveRestApi/www/admin/plugins/reviveRestApi/
+          cp -r vendor/ reviveRestApi/
         fi
         
         # Create the zip file with the plugin directory as root
