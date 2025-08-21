@@ -1,0 +1,77 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        
+    - name: Install dependencies
+      run: composer install --no-dev --optimize-autoloader
+      
+    - name: Run tests
+      run: |
+        composer install --dev
+        composer test
+        
+    - name: Extract version from tag
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+    - name: Update plugin.xml version
+      run: |
+        sed -i "s/<version>.*<\/version>/<version>${{ steps.version.outputs.VERSION }}<\/version>/" plugin.xml
+        
+    - name: Create plugin package
+      run: |
+        # Create package directory with plugin name
+        mkdir -p reviveRestApi
+        
+        # Copy plugin files (exclude dev/build files)
+        cp -r src/ reviveRestApi/
+        cp -r www/ reviveRestApi/
+        cp -r scripts/ reviveRestApi/
+        cp plugin.xml reviveRestApi/
+        cp routes.addendum.php reviveRestApi/
+        cp README.md reviveRestApi/
+        cp CHANGELOG.md reviveRestApi/
+        cp composer.json reviveRestApi/
+        
+        # Copy vendor directory (production dependencies only)
+        if [ -d "vendor" ]; then
+          cp -r vendor/ reviveRestApi/
+        fi
+        
+        # Create the zip file
+        zip -r reviveRestApi-${{ steps.version.outputs.VERSION }}.zip reviveRestApi/
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: reviveRestApi-${{ steps.version.outputs.VERSION }}.zip
+        body: |
+          ## Revive REST API Plugin v${{ steps.version.outputs.VERSION }}
+          
+          ### Installation
+          1. Download `reviveRestApi-${{ steps.version.outputs.VERSION }}.zip`
+          2. Extract to your Revive Adserver plugins directory
+          3. Enable in Revive admin panel
+          
+          ### Changes
+          See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

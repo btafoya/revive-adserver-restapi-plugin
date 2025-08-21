@@ -32,6 +32,9 @@
         "test-coverage": "phpunit --coverage-html coverage",
         "test-unit": "phpunit --testsuite=Unit",
         "test-integration": "phpunit --testsuite=Integration",
-        "test-api": "phpunit --testsuite=API"
+        "test-api": "phpunit --testsuite=API",
+        "package": "php scripts/package.php",
+        "version-bump": "php scripts/version-bump.php",
+        "release": "php scripts/version-bump.php $VERSION --tag"
     }
 }

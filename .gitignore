@@ -38,6 +38,7 @@ temp/
 # Build artifacts
 build/
 dist/
+*.zip
 
 # Cache
 cache/
