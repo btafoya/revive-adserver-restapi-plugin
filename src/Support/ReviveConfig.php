@@ -1,7 +1,8 @@
 <?php
 namespace App\Support;
 
-final class ReviveConfig
+if (!class_exists('App\Support\ReviveConfig')) {
+    final class ReviveConfig
 {
     public static function conf(): array { return $GLOBALS['_MAX']['CONF'] ?? []; }
 
@@ -25,4 +26,5 @@ final class ReviveConfig
         $c = self::conf();
         return rtrim($c['webpath']['imagesSSL'] ?? ($c['webpath']['images'] ?? '/www/images'), '/');
     }
+}
 }

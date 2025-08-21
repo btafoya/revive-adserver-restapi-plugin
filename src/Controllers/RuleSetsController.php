@@ -11,7 +11,7 @@ final class RuleSetsController
     {
         $pdo = $this->pdo();
         $sets = $pdo->query("SELECT id, name, description, created_at, updated_at FROM mcp_rule_sets ORDER BY id DESC")->fetchAll();
-        $this->json(200, ['items'=>$sets]);
+        return $this->json(200, ['items'=>$sets]);
     }
     public function show(array $params)
     {
@@ -26,7 +26,7 @@ final class RuleSetsController
         $rules->execute([$id]);
         $items = [];
         foreach ($rules as $r) { $node = json_decode($r['json_rule'], true); if ($node) $items[] = $node; }
-        $this->json(200, ['set'=>$row, 'rules'=>$items]);
+        return $this->json(200, ['set'=>$row, 'rules'=>$items]);
     }
     public function create()
     {
@@ -42,8 +42,11 @@ final class RuleSetsController
             $order = 1;
             foreach ($rules as $node) $ins->execute([$id, $order++, json_encode($node, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)]);
             $pdo->commit();
-            $this->json(201, ['id'=>$id, 'name'=>$name]);
-        } catch (\Throwable $e) { $pdo->rollBack(); $this->json(500, ['error'=>'failed to create', 'detail'=>$e->getMessage()]); }
+            return $this->json(201, ['id'=>$id, 'name'=>$name]);
+        } catch (\Throwable $e) { 
+            $pdo->rollBack(); 
+            return $this->json(500, ['error'=>'failed to create', 'detail'=>$e->getMessage()]); 
+        }
     }
     public function update(array $params)
     {
@@ -60,20 +63,25 @@ final class RuleSetsController
                 $order = 1;
                 for ($i=0;$i<count($in['rules']);$i++) $ins->execute([$id,$order++,json_encode($in['rules'][$i], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)]);
             }
-            $pdo->commit(); $this->json(200, ['updated'=>true]);
-        } catch (\Throwable $e) { $pdo->rollBack(); $this->json(500, ['error'=>'failed to update', 'detail'=>$e->getMessage()]); }
+            $pdo->commit(); return $this->json(200, ['updated'=>true]);
+        } catch (\Throwable $e) { $pdo->rollBack(); return $this->json(500, ['error'=>'failed to update', 'detail'=>$e->getMessage()]); }
     }
     public function delete(array $params)
     {
         $id = (int)($params['id'] ?? 0); if ($id <= 0) return $this->json(400, ['error'=>'invalid id']);
         $pdo = $this->pdo(); $pdo->prepare("DELETE FROM mcp_rule_sets WHERE id=?")->execute([$id]);
-        $this->json(200, ['deleted'=>true]);
+        return $this->json(200, ['deleted'=>true]);
     }
 
     // preview + export + import + apply (merge/replace) are omitted here because other controllers handle them in the project.
 
     private function pdo(): PDO
     {
+        // Use test database in test environment
+        if (defined('OA_ENVIRONMENT') && OA_ENVIRONMENT === 'test') {
+            return \Tests\Fixtures\TestDatabase::getPdo();
+        }
+        
         $c = $GLOBALS['_MAX']['CONF']['database'];
         $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $c['host'], $c['name']);
         return new PDO($dsn, $c['username'], $c['password'], [

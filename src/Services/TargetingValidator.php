@@ -51,7 +51,7 @@ final class TargetingValidator
                 $logical = strtolower((string)($n['logical'] ?? 'and'));
                 if (!in_array($logical, ['and','or','not'], true)) { $warnings[] = "Unknown group logical at index $i; defaulting to 'and'."; $logical = 'and'; }
                 $children = is_array($n['rules'] ?? null) ? $n['rules'] : [];
-                if (!$children) $warnings.append("Empty group at index $i.");
+                if (!$children) $warnings[] = "Empty group at index $i.";
                 $out[] = ['group'=>$mode, 'logical'=>$logical, 'rules'=>self::normalize($children, $warnings, $seq)];
                 continue;
             }
