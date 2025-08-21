@@ -4,6 +4,49 @@
  * Handles version bumping, git operations, and release publishing
  */
 
+function updateChangelog($baseDir, $version) {
+    $changelogPath = $baseDir . '/CHANGELOG.md';
+    
+    if (!file_exists($changelogPath)) {
+        echo "⚠️  CHANGELOG.md not found, skipping...\n";
+        return;
+    }
+    
+    $changelog = file_get_contents($changelogPath);
+    $today = date('Y-m-d');
+    
+    // Check if there's content in [Unreleased] section
+    $unreleasedPattern = '/## \[Unreleased\]\s*\n(.*?)(?=\n##|\Z)/s';
+    if (!preg_match($unreleasedPattern, $changelog, $matches)) {
+        echo "⚠️  No [Unreleased] section found in CHANGELOG.md\n";
+        return;
+    }
+    
+    $unreleasedContent = trim($matches[1]);
+    
+    if (empty($unreleasedContent)) {
+        echo "ℹ️  No changes in [Unreleased] section, adding placeholder entry\n";
+        $versionEntry = "## [$version] - $today\n\n### Changed\n- Version bump to $version\n";
+    } else {
+        echo "✅ Moving [Unreleased] content to version $version\n";
+        $versionEntry = "## [$version] - $today\n\n$unreleasedContent\n";
+    }
+    
+    // Replace [Unreleased] section with new version and empty [Unreleased]
+    $newChangelog = preg_replace(
+        '/## \[Unreleased\]\s*\n.*?(?=\n##|\Z)/s',
+        "## [Unreleased]\n\n$versionEntry",
+        $changelog
+    );
+    
+    if ($newChangelog === $changelog) {
+        throw new Exception('Failed to update CHANGELOG.md');
+    }
+    
+    file_put_contents($changelogPath, $newChangelog);
+    echo "✅ Updated CHANGELOG.md with version $version\n";
+}
+
 function autoRelease($version, $message = null) {
     $baseDir = dirname(__DIR__);
     
@@ -58,9 +101,13 @@ function autoRelease($version, $message = null) {
         file_put_contents($composerJsonPath, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
     }
     
+    // Update CHANGELOG.md
+    echo "📝 Updating CHANGELOG.md for version $version...\n";
+    updateChangelog($baseDir, $version);
+    
     // Stage version files
     echo "📦 Staging version files...\n";
-    exec('git add plugin.xml composer.json', $output, $returnCode);
+    exec('git add plugin.xml composer.json CHANGELOG.md', $output, $returnCode);
     if ($returnCode !== 0) {
         throw new Exception('Failed to stage version files');
     }
@@ -124,10 +171,11 @@ function showUsage() {
     echo "\nThis script will:\n";
     echo "  1. Stage and commit any pending changes\n";
     echo "  2. Update plugin.xml and composer.json versions\n";
-    echo "  3. Commit version changes\n";
-    echo "  4. Create git tag\n";
-    echo "  5. Push to main branch\n";
-    echo "  6. Push tag to trigger GitHub Actions release\n";
+    echo "  3. Update CHANGELOG.md with version and date\n";
+    echo "  4. Commit version changes\n";
+    echo "  5. Create git tag\n";
+    echo "  6. Push to main branch\n";
+    echo "  7. Push tag to trigger GitHub Actions release\n";
 }
 
 // Command line interface

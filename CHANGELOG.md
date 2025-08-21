@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Automated CHANGELOG.md updates in release script
+- CHANGELOG.md now automatically updated with version and date during releases
+
+### Fixed
+- GitHub Actions permissions for release workflow (403 Forbidden error)
+- JavaScript syntax error in TargetingValidator.php (.append() → [] array syntax)
+- Class redeclaration error in ReviveConfig.php during test coverage
+- Database connection failures in CI environment
+- Missing return statements in RuleSetsController JSON responses
+
+### Changed
+- Release script now includes CHANGELOG.md in automated version updates
+- Improved test environment detection and database mocking
+
 ## [1.0.0] - 2025-08-20
 
 ### Added
