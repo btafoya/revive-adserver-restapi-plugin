@@ -1,6 +1,6 @@
 # Revive Adserver REST API Plugin
 
-[![Release](https://img.shields.io/badge/release-v1.0.0-2ea44f.svg)](https://github.com/btafoya/revive-adserver-restapi-plugin/releases/tag/v1.0.0)
+[![Release](https://img.shields.io/badge/release-v1.0.6-2ea44f.svg)](https://github.com/btafoya/revive-adserver-restapi-plugin/releases/latest)
 [![License](https://img.shields.io/badge/license-GPL--2.0%2B-blue.svg)](./LICENSE)
 [![Revive](https://img.shields.io/badge/Revive-5.x-ff69b4.svg)](https://www.revive-adserver.com/)
 
@@ -24,14 +24,55 @@ A comprehensive REST API plugin for Revive Adserver that provides RESTful endpoi
 
 ## Installation
 
-### Manual Installation
+### Recommended: Plugin Installer (Easy)
 
-1. Download the plugin files
-2. Extract to your Revive plugins directory: `/path/to/revive/plugins/`
-3. Access your Revive admin panel
-4. Navigate to **Plugins** → **Plugin Administration**
-5. Find "REST API Plugin" and click **Install**
-6. Configure plugin settings as needed
+The easiest way to install this plugin is using the Revive Adserver built-in plugin installer:
+
+1. **Download the Plugin Package**
+   - Go to the [Releases page](https://github.com/btafoya/revive-adserver-restapi-plugin/releases)
+   - Download the latest `reviveRestApi-X.X.X.zip` file
+
+2. **Access Plugin Installer**
+   - Log into your Revive Adserver admin panel
+   - Navigate to **Plugins** → **Plugin Administration**
+
+3. **Install Plugin**
+   - Click the **"Install Plugin"** button
+   - Choose **"Upload a plugin"**
+   - Select the downloaded `reviveRestApi-X.X.X.zip` file
+   - Click **"Upload"** to install
+
+4. **Activate Plugin**
+   - After upload, find "Revive REST API (MCP Compatible)" in the plugin list
+   - Click **"Install"** to activate the plugin
+   - The plugin status should change to "Enabled"
+
+5. **Configure Settings**
+   - Click **"Settings"** next to the plugin
+   - Configure the **API Base Path** (default: `/api/v1`)
+   - Save your settings
+
+6. **Verify Installation**
+   - Test the API health endpoint: `http://yoursite.com/api/v1/health`
+   - You should receive a JSON response confirming the API is working
+
+### Alternative: Manual Installation
+
+If you prefer manual installation:
+
+1. **Download Plugin Files**
+   - Download the latest release ZIP file
+   - Extract the contents
+
+2. **Upload to Server**
+   - Upload the `reviveRestApi` folder to: `/path/to/revive/plugins/`
+   - Ensure proper file permissions (readable by web server)
+
+3. **Install via Admin Panel**
+   - Access your Revive admin panel
+   - Navigate to **Plugins** → **Plugin Administration**
+   - Find "Revive REST API (MCP Compatible)" and click **Install**
+   - Configure plugin settings as needed
 
 ### Docker Installation
 
@@ -41,6 +82,23 @@ If using the Docker setup from this repository:
 # Plugin is already included in the container
 docker-compose up -d
 ```
+
+### Troubleshooting Installation
+
+**Plugin Not Showing Up:**
+- Verify the ZIP file was uploaded correctly
+- Check file permissions on the plugins directory
+- Ensure Revive Adserver version compatibility (5.0+)
+
+**Upload Fails:**
+- Check PHP upload limits (`upload_max_filesize`, `post_max_size`)
+- Verify disk space on server
+- Ensure web server has write permissions to plugins directory
+
+**API Not Working After Install:**
+- Clear any caches (browser, CDN, server-side)
+- Check web server URL rewriting is enabled
+- Verify no conflicting plugins or .htaccess rules
 
 ## Configuration
 

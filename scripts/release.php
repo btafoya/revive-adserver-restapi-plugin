@@ -47,6 +47,31 @@ function updateChangelog($baseDir, $version) {
     echo "✅ Updated CHANGELOG.md with version $version\n";
 }
 
+function updateReadmeBadge($baseDir, $version) {
+    $readmePath = $baseDir . '/README.md';
+    
+    if (!file_exists($readmePath)) {
+        echo "⚠️  README.md not found, skipping badge update...\n";
+        return;
+    }
+    
+    $readme = file_get_contents($readmePath);
+    
+    // Update release badge to new version
+    $badgePattern = '/\[\!\[Release\]\(https:\/\/img\.shields\.io\/badge\/release-v[\d\.]+/';
+    $newBadge = '[![Release](https://img.shields.io/badge/release-v' . $version;
+    
+    $updatedReadme = preg_replace($badgePattern, $newBadge, $readme);
+    
+    if ($updatedReadme === $readme) {
+        echo "ℹ️  No release badge found in README.md or already current\n";
+        return;
+    }
+    
+    file_put_contents($readmePath, $updatedReadme);
+    echo "✅ Updated README.md release badge to v$version\n";
+}
+
 function autoRelease($version, $message = null) {
     $baseDir = dirname(__DIR__);
     
@@ -105,9 +130,13 @@ function autoRelease($version, $message = null) {
     echo "📝 Updating CHANGELOG.md for version $version...\n";
     updateChangelog($baseDir, $version);
     
+    // Update README.md release badge
+    echo "📝 Updating README.md release badge to $version...\n";
+    updateReadmeBadge($baseDir, $version);
+    
     // Stage version files
     echo "📦 Staging version files...\n";
-    exec('git add plugin.xml composer.json CHANGELOG.md', $output, $returnCode);
+    exec('git add plugin.xml composer.json CHANGELOG.md README.md', $output, $returnCode);
     if ($returnCode !== 0) {
         throw new Exception('Failed to stage version files');
     }
@@ -172,10 +201,11 @@ function showUsage() {
     echo "  1. Stage and commit any pending changes\n";
     echo "  2. Update plugin.xml and composer.json versions\n";
     echo "  3. Update CHANGELOG.md with version and date\n";
-    echo "  4. Commit version changes\n";
-    echo "  5. Create git tag\n";
-    echo "  6. Push to main branch\n";
-    echo "  7. Push tag to trigger GitHub Actions release\n";
+    echo "  4. Update README.md release badge\n";
+    echo "  5. Commit version changes\n";
+    echo "  6. Create git tag\n";
+    echo "  7. Push to main branch\n";
+    echo "  8. Push tag to trigger GitHub Actions release\n";
 }
 
 // Command line interface
