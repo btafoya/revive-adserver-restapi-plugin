@@ -60,22 +60,30 @@ function createPluginPackage($version = null) {
         exec("cp -r " . escapeshellarg($vendorDir) . " " . escapeshellarg($pluginDir . '/vendor'));
     }
     
-    // Create zip file using system zip command
-    $cwd = getcwd();
-    chdir($packageDir);
+    // Create zip file using PHP ZipArchive
+    $zip = new ZipArchive();
+    if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+        throw new Exception('Cannot create zip file: ' . $zipFile);
+    }
     
-    $zipCommand = sprintf(
-        'zip -r %s %s',
-        escapeshellarg(basename($zipFile)),
-        escapeshellarg($pluginName)
+    // Add files to zip
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($pluginDir, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::SELF_FIRST
     );
     
-    exec($zipCommand, $output, $returnCode);
-    chdir($cwd);
-    
-    if ($returnCode !== 0) {
-        throw new Exception('Failed to create zip file: ' . implode("\n", $output));
+    foreach ($iterator as $file) {
+        $filePath = $file->getPathname();
+        $relativePath = $pluginName . '/' . substr($filePath, strlen($pluginDir) + 1);
+        
+        if ($file->isDir()) {
+            $zip->addEmptyDir($relativePath);
+        } else {
+            $zip->addFile($filePath, $relativePath);
+        }
     }
+    
+    $zip->close();
     
     echo "Package created: " . $zipFile . "\n";
     echo "Plugin directory structure:\n";
