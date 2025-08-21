@@ -40,6 +40,9 @@ build/
 dist/
 *.zip
 
+# Release files should be tracked
+!release
+
 # Cache
 cache/
 *.cache

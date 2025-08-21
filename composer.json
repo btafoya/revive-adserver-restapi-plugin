@@ -35,6 +35,6 @@
         "test-api": "phpunit --testsuite=API",
         "package": "php scripts/package.php",
         "version-bump": "php scripts/version-bump.php",
-        "release": "php scripts/version-bump.php $VERSION --tag"
+        "release": "php scripts/release.php"
     }
 }
