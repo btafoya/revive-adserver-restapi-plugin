@@ -20,3 +20,15 @@ $router->post('/api/v1/banners/apply', [\App\Controllers\BannersApplyController:
 // Schema + Variables helper
 $router->get ('/api/v1/targeting/schema', [\App\Controllers\TargetingSchemaController::class, 'schema']);
 $router->post('/api/v1/variables/site/format', [\App\Controllers\VariablesController::class, 'formatSite']);
+
+// API Token Management
+$router->get   ('/api/v1/tokens',           [\App\Controllers\ApiTokensController::class, 'index']);
+$router->get   ('/api/v1/tokens/{id:\d+}', [\App\Controllers\ApiTokensController::class, 'show']);
+$router->post  ('/api/v1/tokens',           [\App\Controllers\ApiTokensController::class, 'create']);
+$router->put   ('/api/v1/tokens/{id:\d+}', [\App\Controllers\ApiTokensController::class, 'update']);
+$router->delete('/api/v1/tokens/{id:\d+}', [\App\Controllers\ApiTokensController::class, 'delete']);
+
+// API Settings & Administration
+$router->get   ('/api/v1/admin/settings',  [\App\Controllers\ApiTokensController::class, 'settings']);
+$router->put   ('/api/v1/admin/settings',  [\App\Controllers\ApiTokensController::class, 'updateSettings']);
+$router->post  ('/api/v1/admin/cleanup',   [\App\Controllers\ApiTokensController::class, 'cleanup']);
