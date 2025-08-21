@@ -81,5 +81,12 @@ final class RuleSetsController
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
     }
-    private function json(int $status, array $payload){ http_response_code($status); header('Content-Type: application/json'); echo json_encode($payload); }
+    private function json(int $status, array $payload) { 
+        // Skip headers in test environment to avoid conflicts
+        if (!defined('OA_ENVIRONMENT') || OA_ENVIRONMENT !== 'test') {
+            http_response_code($status); 
+            header('Content-Type: application/json'); 
+        }
+        echo json_encode($payload); 
+    }
 }

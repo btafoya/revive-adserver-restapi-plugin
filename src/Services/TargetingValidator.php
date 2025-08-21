@@ -88,9 +88,9 @@ final class TargetingValidator
                 $data = $ok || $vals;
             } elseif ($type === 'Time:HourRange') {
                 $from = $data['from'] ?? null; $to = $data['to'] ?? null;
-                if (!is_numeric($from) || !is_numeric($to)):
+                if (!is_numeric($from) || !is_numeric($to)) {
                     $warnings[] = "Time:HourRange requires numeric 'from' && 'to'.";
-                 } else {
+                } else {
                     if ((int)$from < 0 || (int)$from > 23) $warnings[] = "HourRange 'from' out of range (0–23).";
                     if ((int)$to   < 0 || (int)$to   > 23) $warnings[] = "HourRange 'to' out of range (0–23).";
                     if ((int)$from > (int)$to) $warnings[] = "HourRange from>to; split into two ranges for overnight windows.";

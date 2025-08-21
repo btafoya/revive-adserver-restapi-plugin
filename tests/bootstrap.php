@@ -27,3 +27,17 @@ date_default_timezone_set('UTC');
 // Error reporting for tests
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+
+// Mock Revive Adserver global configuration for tests
+if (!isset($GLOBALS['_MAX'])) {
+    $GLOBALS['_MAX'] = [
+        'CONF' => [
+            'database' => [
+                'host' => 'localhost',
+                'name' => 'test_revive',
+                'username' => 'test_user',
+                'password' => 'test_pass'
+            ]
+        ]
+    ];
+}
