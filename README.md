@@ -1,6 +1,6 @@
 # Revive Adserver REST API Plugin
 
-[![Release](https://img.shields.io/badge/release-v1.0.10-2ea44f.svg)](https://github.com/btafoya/revive-adserver-restapi-plugin/releases/latest)
+[![Release](https://img.shields.io/badge/release-v1.0.11-2ea44f.svg)](https://github.com/btafoya/revive-adserver-restapi-plugin/releases/latest)
 [![License](https://img.shields.io/badge/license-GPL--2.0%2B-blue.svg)](./LICENSE)
 [![Revive](https://img.shields.io/badge/Revive-5.x-ff69b4.svg)](https://www.revive-adserver.com/)
 
