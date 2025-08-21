@@ -1,0 +1,37 @@
+{
+    "name": "btafoya/revive-adserver-restapi-plugin",
+    "description": "REST API plugin for Revive Adserver with MCP compatibility",
+    "type": "revive-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Brian Tafoya",
+            "email": "btafoya@briantafoya.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "mockery/mockery": "^1.4",
+        "fakerphp/faker": "^1.20"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "test-unit": "phpunit --testsuite=Unit",
+        "test-integration": "phpunit --testsuite=Integration",
+        "test-api": "phpunit --testsuite=API"
+    }
+}
